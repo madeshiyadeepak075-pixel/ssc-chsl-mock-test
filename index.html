@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="hi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SSC CHSL Practice Portal</title>
+<style>
+:root{color-scheme:light;--ink:#172033;--muted:#667085;--line:#e4e7ec;--bg:#f4f6fb;--accent:#2457d6}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Noto Sans Devanagari",sans-serif}main{max-width:820px;margin:auto;padding:16px 13px 40px}.card{background:white;border:1px solid var(--line);border-radius:18px;padding:17px;margin:12px 0;box-shadow:0 3px 14px #1018280a}h1{font-size:1.45rem;margin:7px 0}h2{font-size:1.1rem;margin:0 0 8px}.muted{color:var(--muted);font-size:.92rem}.pill{display:inline-block;border-radius:999px;padding:5px 10px;background:#eef2ff;color:#233d91;font-size:.85rem}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.subject{padding:12px;border:1px solid var(--line);border-radius:12px;background:white;font:inherit;font-weight:700;cursor:pointer}.subject.active{background:#eef2ff;border-color:var(--accent);color:#233d91}button{border:0;border-radius:12px;padding:12px 15px;font:inherit;font-weight:700;cursor:pointer}.primary{background:var(--accent);color:white;width:100%}.timer{font-size:2.4rem;font-weight:800;text-align:center;font-variant-numeric:tabular-nums}.danger{color:#c62828}.center{text-align:center}.question{padding:15px 0;border-bottom:1px solid var(--line)}.qtitle{font-weight:700;margin-bottom:9px}label.option{display:flex;gap:10px;padding:10px;border:1px solid var(--line);border-radius:10px;margin:6px 0;cursor:pointer}label.option:has(input:checked){background:#f2f5ff;border-color:var(--accent)}input[type=radio]{margin-top:4px;accent-color:var(--accent)}.hidden{display:none}.score{font-size:1.7rem;font-weight:800}.correct{color:#147d42}.wrong{color:#c62828}.result-item{border-top:1px solid var(--line);padding:12px 0}
+</style></head><body><main>
+<section class="card"><span class="pill">SSC CHSL Practice Portal · Personal study page</span><h1>SSC CHSL Practice Portal</h1><p class="muted">Ek hi page baar-baar use karo—har baar naya file download karne ki zaroorat nahi. Har test mein pehle na aaye questions milenge jab tak us subject ka question bank khatam na ho; uske baad bank dobara shuru hoga. Ye personal practice page hai, official SSC website nahi.</p>
+<div class="grid" id="subjects"><button type="button" class="subject active" data-sub="GK">🇮🇳 GK</button><button type="button" class="subject" data-sub="Maths">➗ Maths</button><button type="button" class="subject" data-sub="Reasoning">🧠 Reasoning</button><button type="button" class="subject" data-sub="English">🔤 English</button></div></section>
+<section class="card"><h2 id="testTitle">Full Mock Test</h2><p class="muted">40 questions (10 per subject) · Repeat se bachne wala question bank · Ek continuous 80-minute timer · 1 mark per correct answer</p><div id="timer" class="timer">80:00</div><p id="note" class="muted center">Start Test dabao, countdown shuru hoga.</p><button id="start" class="primary" type="button">Start Test</button></section>
+<form id="form" class="card hidden"><div id="questions"></div><button class="primary" type="submit">Submit Test</button></form>
+<section id="result" class="card hidden" aria-live="polite"></section>
+<section class="card"><h2>Official SSC Website</h2><p class="muted">Official notices aur exam forms ke liye SSC ki asli website kholo.</p><a href="https://ssc.gov.in/" target="_blank" rel="noopener">ssc.gov.in</a></section>
+</main>
+<script>
+const banks={
+GK:[
+{q:"भारत का राष्ट्रीय जलीय जीव कौन है?",o:["मगरमच्छ","गंगा डॉल्फिन","कछुआ","नीली व्हेल"],a:1,e:"गंगा डॉल्फिन भारत का राष्ट्रीय जलीय जीव है।"},
+{q:"'सत्यमेव जयते' किस उपनिषद से लिया गया है?",o:["ईश","कठ","मुण्डक","केन"],a:2,e:"यह मुण्डक उपनिषद से लिया गया है।"},
+{q:"पंचायती राज व्यवस्था सबसे पहले किस राज्य में शुरू हुई?",o:["उत्तर प्रदेश","राजस्थान","बिहार","गुजरात"],a:1,e:"1959 में राजस्थान के नागौर में इसकी शुरुआत हुई।"},
+{q:"लाल ग्रह किसे कहा जाता है?",o:["बुध","शुक्र","मंगल","शनि"],a:2,e:"मंगल को लाल ग्रह कहते हैं।"},
+{q:"भारत का राष्ट्रीय वृक्ष कौन है?",o:["नीम","बरगद","पीपल","आम"],a:1,e:"बरगद भारत का राष्ट्रीय वृक्ष है।"},
+{q:"जलियांवाला बाग हत्याकांड किस वर्ष हुआ?",o:["1905","1919","1922","1930"],a:1,e:"यह 13 अप्रैल 1919 को हुआ था।"},
+{q:"कंप्यूटर का मस्तिष्क किसे कहा जाता है?",o:["RAM","CPU","कीबोर्ड","मॉनिटर"],a:1,e:"CPU निर्देशों को संसाधित करता है।"},
+{q:"सबसे लंबी समुद्री तटरेखा वाला भारतीय राज्य कौन है?",o:["तमिलनाडु","आंध्र प्रदेश","गुजरात","केरल"],a:2,e:"गुजरात की तटरेखा भारतीय राज्यों में सबसे लंबी है।"},
+{q:"'गीतांजलि' के लेखक कौन हैं?",o:["प्रेमचंद","रवींद्रनाथ टैगोर","हरिवंश राय बच्चन","महादेवी वर्मा"],a:1,e:"गीतांजलि रवींद्रनाथ टैगोर की रचना है।"},
+{q:"संविधान में मौलिक अधिकार किस भाग में हैं?",o:["भाग I","भाग II","भाग III","भाग IV"],a:2,e:"मौलिक अधिकार भाग III में हैं।"}
+,{q:"भारत का संविधान कब लागू हुआ?",o:["15 अगस्त 1947","26 जनवरी 1950","26 नवंबर 1949","2 अक्टूबर 1950"],a:1,e:"संविधान 26 जनवरी 1950 को लागू हुआ।"}
+,{q:"भारत के प्रथम राष्ट्रपति कौन थे?",o:["डॉ. राजेंद्र प्रसाद","डॉ. राधाकृष्णन","जवाहरलाल नेहरू","सरदार पटेल"],a:0,e:"डॉ. राजेंद्र प्रसाद भारत के प्रथम राष्ट्रपति थे।"}
+,{q:"क्षेत्रफल के अनुसार भारत का सबसे बड़ा राज्य कौन है?",o:["मध्य प्रदेश","उत्तर प्रदेश","राजस्थान","महाराष्ट्र"],a:2,e:"राजस्थान क्षेत्रफल के अनुसार सबसे बड़ा राज्य है।"}
+,{q:"भारत की राजधानी क्या है?",o:["मुंबई","नई दिल्ली","कोलकाता","चेन्नई"],a:1,e:"भारत की राजधानी नई दिल्ली है।"}
+,{q:"भारत छोड़ो आंदोलन किस वर्ष शुरू हुआ?",o:["1920","1930","1942","1947"],a:2,e:"भारत छोड़ो आंदोलन 1942 में शुरू हुआ।"}
+,{q:"सौरमंडल का सबसे बड़ा ग्रह कौन है?",o:["पृथ्वी","मंगल","शनि","बृहस्पति"],a:3,e:"बृहस्पति सौरमंडल का सबसे बड़ा ग्रह है।"}
+,{q:"भारत का राष्ट्रीय गान किसने लिखा?",o:["बंकिमचंद्र चट्टोपाध्याय","रवींद्रनाथ टैगोर","महात्मा गांधी","प्रेमचंद"],a:1,e:"जन गण मन रवींद्रनाथ टैगोर ने लिखा।"}
+,{q:"भारतीय रिज़र्व बैंक की स्थापना किस वर्ष हुई?",o:["1935","1947","1950","1920"],a:0,e:"RBI की स्थापना 1935 में हुई।"}
+,{q:"मानव शरीर में रक्त पंप करने वाला अंग कौन-सा है?",o:["फेफड़ा","यकृत","हृदय","गुर्दा"],a:2,e:"हृदय रक्त पंप करता है।"}
+,{q:"पौधे प्रकाश संश्लेषण में कौन-सी गैस लेते हैं?",o:["ऑक्सीजन","कार्बन डाइऑक्साइड","नाइट्रोजन","हाइड्रोजन"],a:1,e:"प्रकाश संश्लेषण में पौधे कार्बन डाइऑक्साइड लेते हैं।"}
+,{q:"भारत का राष्ट्रीय पशु कौन है?",o:["शेर","हाथी","बाघ","तेंदुआ"],a:2,e:"बाघ भारत का राष्ट्रीय पशु है।"}
+,{q:"कंप्यूटर में डेटा की सबसे छोटी इकाई क्या है?",o:["बाइट","बिट","किलोबाइट","मेगाबाइट"],a:1,e:"बिट डेटा की सबसे छोटी इकाई है।"}
+,{q:"किस नदी को दक्षिण गंगा कहा जाता है?",o:["कृष्णा","कावेरी","गोदावरी","नर्मदा"],a:2,e:"गोदावरी को दक्षिण गंगा कहा जाता है।"}
+,{q:"भारत का राष्ट्रीय फूल कौन-सा है?",o:["गुलाब","कमल","चमेली","गेंदा"],a:1,e:"कमल भारत का राष्ट्रीय फूल है।"}
+,{q:"सूर्य के सबसे निकट ग्रह कौन-सा है?",o:["शुक्र","पृथ्वी","बुध","मंगल"],a:2,e:"बुध सूर्य के सबसे निकट ग्रह है।"}],
+Maths:[
+{q:"25 + 17 = ?",o:["32","42","43","52"],a:1,e:"25 + 17 = 42."},{q:"12 × 8 = ?",o:["86","94","96","108"],a:2,e:"12 × 8 = 96."},{q:"100 का 25% कितना है?",o:["15","20","25","30"],a:2,e:"100 का 25% = 25."},{q:"3/4 को प्रतिशत में बदलें।",o:["25%","50%","75%","80%"],a:2,e:"3/4 × 100 = 75%."},{q:"15 और 20 का HCF क्या है?",o:["3","5","10","15"],a:1,e:"सबसे बड़ा समान भाजक 5 है।"},{q:"एक दर्जन में कितनी वस्तुएँ होती हैं?",o:["10","12","15","20"],a:1,e:"एक दर्जन में 12 वस्तुएँ होती हैं।"},{q:"यदि x + 7 = 15, तो x = ?",o:["6","7","8","9"],a:2,e:"x = 15 − 7 = 8."},{q:"60 का 10% कितना है?",o:["3","6","10","12"],a:1,e:"60 × 10/100 = 6."},{q:"वर्ग की भुजा 5 cm है। परिमाप?",o:["10 cm","15 cm","20 cm","25 cm"],a:2,e:"परिमाप = 4 × 5 = 20 cm."},{q:"2, 4, 6, 8, अगली संख्या?",o:["9","10","11","12"],a:1,e:"हर बार 2 जोड़ते हैं।"}
+,{q:"200 का 15% कितना है?",o:["20","25","30","35"],a:2,e:"200 × 15/100 = 30."}
+,{q:"18 और 24 का HCF क्या है?",o:["3","6","9","12"],a:1,e:"18 और 24 का सबसे बड़ा समान भाजक 6 है।"}
+,{q:"7 × 9 = ?",o:["56","63","72","79"],a:1,e:"7 × 9 = 63."}
+,{q:"एक वस्तु ₹100 में खरीदी और ₹120 में बेची। लाभ प्रतिशत?",o:["10%","15%","20%","25%"],a:2,e:"लाभ 20 रुपये है; 20/100 × 100 = 20%."}
+,{q:"0.5 को भिन्न में लिखें।",o:["1/5","1/2","2/5","3/5"],a:1,e:"0.5 = 5/10 = 1/2."}
+,{q:"त्रिभुज के तीनों कोणों का योग कितना है?",o:["90°","180°","270°","360°"],a:1,e:"त्रिभुज के कोणों का योग 180° होता है।"}
+,{q:"यदि 5x = 40, तो x = ?",o:["5","6","8","10"],a:2,e:"x = 40/5 = 8."}
+,{q:"40 का 3/4 कितना है?",o:["20","25","30","35"],a:2,e:"40 × 3/4 = 30."}
+,{q:"एक वस्तु ₹500 की है। 10% छूट के बाद कीमत?",o:["₹400","₹450","₹475","₹490"],a:1,e:"छूट ₹50, इसलिए कीमत ₹450."}
+,{q:"12² कितना है?",o:["124","144","132","154"],a:1,e:"12 × 12 = 144."}
+,{q:"60 km दूरी 2 घंटे में तय की। औसत चाल?",o:["20 km/h","30 km/h","40 km/h","60 km/h"],a:1,e:"चाल = दूरी/समय = 60/2 = 30 km/h."}
+,{q:"5, 10 और 15 का औसत क्या है?",o:["8","10","12","15"],a:1,e:"औसत = (5+10+15)/3 = 10."}
+,{q:"एक वर्ग की भुजा 6 cm है। क्षेत्रफल?",o:["12 cm²","24 cm²","36 cm²","30 cm²"],a:2,e:"क्षेत्रफल = 6 × 6 = 36 cm²."}
+,{q:"1 किलोमीटर में कितने मीटर होते हैं?",o:["100","500","1000","10000"],a:2,e:"1 किलोमीटर = 1000 मीटर."}
+,{q:"यदि 20 का 20% निकालें, तो उत्तर?",o:["2","4","5","10"],a:1,e:"20 × 20/100 = 4."}],
+Reasoning:[
+{q:"2, 4, 6, 8, ?",o:["9","10","11","12"],a:1,e:"हर बार 2 बढ़ रहा है।"},{q:"अलग चुनें।",o:["सेब","आम","गाजर","केला"],a:2,e:"गाजर सब्ज़ी है, बाकी फल हैं।"},{q:"A, C, E, G, ?",o:["H","I","J","K"],a:1,e:"अगला अक्षर I है।"},{q:"आज सोमवार है, 2 दिन बाद?",o:["मंगलवार","बुधवार","गुरुवार","शुक्रवार"],a:1,e:"दो दिन बाद बुधवार है।"},{q:"5, 10, 15, 20, ?",o:["22","24","25","30"],a:2,e:"हर बार 5 जोड़ें।"},{q:"कौन-सा अलग है?",o:["त्रिभुज","वर्ग","वृत्त","कुर्सी"],a:3,e:"कुर्सी आकृति नहीं, वस्तु है।"},{q:"उत्तर की विपरीत दिशा?",o:["पूर्व","पश्चिम","दक्षिण","उत्तर-पूर्व"],a:2,e:"उत्तर की विपरीत दिशा दक्षिण है।"},{q:"CAT को DBU लिखें, तो DOG?",o:["EPH","CNG","EOG","FPH"],a:0,e:"हर अक्षर का अगला अक्षर लें: EPH."},{q:"1, 4, 9, 16, ?",o:["20","24","25","36"],a:2,e:"अगला 5² = 25 है।"},{q:"सप्ताह में कितने दिन?",o:["5","6","7","8"],a:2,e:"एक सप्ताह में 7 दिन होते हैं।"}
+,{q:"3, 6, 9, 12, ?",o:["13","14","15","18"],a:2,e:"हर बार 3 जोड़ते हैं; अगला 15 है।"}
+,{q:"Z, X, V, T, ?",o:["S","R","Q","P"],a:1,e:"हर बार दो अक्षर पीछे जा रहे हैं; अगला R है।"}
+,{q:"यदि आज शुक्रवार है, तो 3 दिन बाद कौन-सा दिन होगा?",o:["रविवार","सोमवार","मंगलवार","बुधवार"],a:1,e:"शनिवार, रविवार, सोमवार — तीन दिन बाद सोमवार।"}
+,{q:"किताब : पढ़ना :: भोजन : ?",o:["सोना","खाना","लिखना","चलना"],a:1,e:"किताब पढ़ी जाती है और भोजन खाया जाता है।"}
+,{q:"8, 16, 24, 32, ?",o:["36","40","42","48"],a:1,e:"हर बार 8 जोड़ते हैं; अगला 40 है।"}
+,{q:"अलग चुनें।",o:["जनवरी","मार्च","मई","मंगलवार"],a:3,e:"मंगलवार सप्ताह का दिन है, बाकी महीने हैं।"}
+,{q:"यदि A=1, B=2, तो D = ?",o:["3","4","5","6"],a:1,e:"अक्षरों के क्रम में D चौथे स्थान पर है।"}
+,{q:"किस दिशा में सूरज उगता है?",o:["उत्तर","दक्षिण","पूर्व","पश्चिम"],a:2,e:"सूरज पूर्व दिशा में उगता है।"}
+,{q:"11, 22, 33, 44, ?",o:["45","50","55","66"],a:2,e:"हर बार 11 जोड़ते हैं; अगला 55 है।"}
+,{q:"हाथ : दस्ताना :: पैर : ?",o:["टोपी","जूता","कमीज","चश्मा"],a:1,e:"दस्ताना हाथ में और जूता पैर में पहना जाता है।"}
+,{q:"कौन-सी संख्या अलग है?",o:["4","9","16","18"],a:3,e:"4, 9 और 16 पूर्ण वर्ग हैं; 18 नहीं।"}
+,{q:"P, Q का भाई है। Q, R की बहन है। P का R से क्या संबंध है?",o:["भाई","बहन","पिता","माता"],a:0,e:"P, Q का भाई है और Q, R की बहन है; P, R का भाई है।"}
+,{q:"यदि CAT = DBU, तो SUN = ?",o:["TVO","RTM","TVN","SVP"],a:0,e:"हर अक्षर में 1 जोड़ें: S→T, U→V, N→O."}
+,{q:"किस आकृति के कोई कोने नहीं होते?",o:["वर्ग","त्रिभुज","वृत्त","आयत"],a:2,e:"वृत्त के कोई कोने नहीं होते।"}
+,{q:"100, 90, 80, 70, ?",o:["65","60","55","50"],a:1,e:"हर बार 10 घटता है; अगला 60 है।"}],
+English:[
+{q:"Choose the synonym of 'Happy'.",o:["Sad","Glad","Angry","Tired"],a:1,e:"Happy और Glad का अर्थ खुश है।"},{q:"Antonym of 'Hot'?",o:["Warm","Cold","Heat","Boil"],a:1,e:"Hot का opposite Cold है।"},{q:"She ___ a student.",o:["am","are","is","be"],a:2,e:"She के साथ is आता है।"},{q:"Plural of 'Child'?",o:["Childs","Children","Childes","Childrens"],a:1,e:"Child का plural Children है।"},{q:"Correct spelling:",o:["Beautifull","Beutiful","Beautiful","Beautifal"],a:2,e:"सही spelling Beautiful है।"},{q:"Past tense of 'Go'?",o:["Goed","Gone","Went","Going"],a:2,e:"Go का simple past Went है।"},{q:"I ___ cricket every day.",o:["plays","play","playing","played"],a:1,e:"I के साथ play आएगा।"},{q:"Opposite of 'Early'?",o:["Soon","Late","Fast","Quick"],a:1,e:"Early का opposite Late है।"},{q:"A person who teaches is a:",o:["Doctor","Teacher","Farmer","Driver"],a:1,e:"पढ़ाने वाला Teacher होता है।"},{q:"___ apple",o:["A","An","The only","No article"],a:1,e:"Vowel sound से पहले An आता है।"}
+,{q:"Synonym of 'Begin' is:",o:["Start","Stop","End","Close"],a:0,e:"Begin और Start का अर्थ शुरू करना है।"}
+,{q:"Antonym of 'Strong' is:",o:["Powerful","Weak","Hard","Tough"],a:1,e:"Strong का opposite Weak है।"}
+,{q:"They ___ playing football.",o:["is","am","are","was"],a:2,e:"They के साथ are आता है।"}
+,{q:"Past tense of 'Eat' is:",o:["Eated","Ate","Eaten","Eating"],a:1,e:"Eat का simple past Ate है।"}
+,{q:"Choose the correct spelling:",o:["Necessary","Neccessary","Necesary","Necessery"],a:0,e:"सही spelling Necessary है।"}
+,{q:"Plural of 'Mouse' is:",o:["Mouses","Mices","Mice","Mouse"],a:2,e:"Mouse का plural Mice है।"}
+,{q:"He ___ to school every day.",o:["go","goes","going","gone"],a:1,e:"He के साथ simple present में goes आता है।"}
+,{q:"Opposite of 'Difficult' is:",o:["Hard","Tough","Easy","Strong"],a:2,e:"Difficult का opposite Easy है।"}
+,{q:"Choose the correct article: ___ honest man",o:["A","An","The only","No article"],a:1,e:"Honest में h silent है; vowel sound के कारण An आएगा।"}
+,{q:"A place where books are kept is a:",o:["Library","Bakery","Factory","Hospital"],a:0,e:"Books रखने की जगह Library है।"}
+,{q:"Synonym of 'Quick' is:",o:["Slow","Fast","Late","Weak"],a:1,e:"Quick और Fast का अर्थ तेज़ है।"}
+,{q:"She has ___ umbrella.",o:["a","an","the only","no"],a:1,e:"Umbrella vowel sound से शुरू होता है, इसलिए an."}
+,{q:"Choose the correct sentence:",o:["He are happy.","He is happy.","He am happy.","He be happy."],a:1,e:"He के साथ is का प्रयोग होता है।"}
+,{q:"Opposite of 'Clean' is:",o:["Neat","Dirty","Clear","Fresh"],a:1,e:"Clean का opposite Dirty है।"}
+,{q:"The past tense of 'Write' is:",o:["Writed","Written","Wrote","Writing"],a:2,e:"Write का simple past Wrote है।"}]
+};
+// Extra built-in questions: the same saved page can generate fresh randomized tests offline.
+banks.GK.push(
+{q:"भारत का राष्ट्रीय गीत कौन-सा है?",o:["जन गण मन","वंदे मातरम्","सारे जहाँ से अच्छा","ऐ मेरे वतन"],a:1,e:"वंदे मातरम् भारत का राष्ट्रीय गीत है।"},
+{q:"लोकसभा का सामान्य कार्यकाल कितने वर्ष का होता है?",o:["4 वर्ष","5 वर्ष","6 वर्ष","7 वर्ष"],a:1,e:"लोकसभा का सामान्य कार्यकाल 5 वर्ष है।"},
+{q:"ताजमहल किस नदी के किनारे स्थित है?",o:["गंगा","यमुना","गोदावरी","नर्मदा"],a:1,e:"ताजमहल आगरा में यमुना नदी के किनारे है।"},
+{q:"भारत में हरित क्रांति का संबंध मुख्यतः किससे है?",o:["दूध उत्पादन","खाद्यान्न उत्पादन","मछली उत्पादन","तेल उत्पादन"],a:1,e:"हरित क्रांति का संबंध खाद्यान्न, विशेषकर गेहूँ के उत्पादन से है।"},
+{q:"विटामिन C की कमी से कौन-सा रोग होता है?",o:["रिकेट्स","स्कर्वी","बेरी-बेरी","रतौंधी"],a:1,e:"विटामिन C की कमी से स्कर्वी होता है।"},
+{q:"भारत का सबसे छोटा राज्य (क्षेत्रफल के अनुसार) कौन है?",o:["सिक्किम","त्रिपुरा","गोवा","मणिपुर"],a:2,e:"क्षेत्रफल के अनुसार गोवा भारत का सबसे छोटा राज्य है।"},
+{q:"भारतीय संविधान के प्रारूप समिति के अध्यक्ष कौन थे?",o:["डॉ. बी. आर. आंबेडकर","डॉ. राजेंद्र प्रसाद","जवाहरलाल नेहरू","सरदार पटेल"],a:0,e:"प्रारूप समिति के अध्यक्ष डॉ. बी. आर. आंबेडकर थे।"},
+{q:"पानी का रासायनिक सूत्र क्या है?",o:["CO₂","O₂","H₂O","NaCl"],a:2,e:"पानी का रासायनिक सूत्र H₂O है।"},
+{q:"किस धातु को सामान्य तापमान पर तरल अवस्था में पाया जाता है?",o:["लोहा","तांबा","पारा","एल्युमिनियम"],a:2,e:"पारा सामान्य तापमान पर तरल धातु है।"},
+{q:"भारत में शिक्षक दिवस कब मनाया जाता है?",o:["5 सितंबर","14 नवंबर","2 अक्टूबर","15 अगस्त"],a:0,e:"डॉ. सर्वपल्ली राधाकृष्णन के जन्मदिन 5 सितंबर को शिक्षक दिवस मनाया जाता है।"}
+);
+banks.Maths.push(
+{q:"80 का 25% कितना है?",o:["10","15","20","25"],a:2,e:"80 × 25/100 = 20."},
+{q:"12 और 18 का LCM क्या है?",o:["24","30","36","48"],a:2,e:"12 और 18 का LCM 36 है।"},
+{q:"यदि किसी संख्या का आधा 18 है, तो संख्या क्या है?",o:["9","18","36","54"],a:2,e:"संख्या = 18 × 2 = 36."},
+{q:"एक वस्तु ₹200 में खरीदी और ₹250 में बेची। लाभ कितना है?",o:["₹25","₹40","₹50","₹60"],a:2,e:"लाभ = विक्रय मूल्य − क्रय मूल्य = ₹50."},
+{q:"9 का वर्ग कितना है?",o:["18","27","72","81"],a:3,e:"9² = 9 × 9 = 81."},
+{q:"एक आयत की लंबाई 8 cm और चौड़ाई 3 cm है। क्षेत्रफल?",o:["11 cm²","22 cm²","24 cm²","48 cm²"],a:2,e:"क्षेत्रफल = लंबाई × चौड़ाई = 8 × 3 = 24 cm²."},
+{q:"1 घंटे में कितने सेकंड होते हैं?",o:["60","600","1800","3600"],a:3,e:"1 घंटा = 60 × 60 = 3600 सेकंड."},
+{q:"यदि 3x = 27, तो x कितना है?",o:["6","8","9","12"],a:2,e:"x = 27/3 = 9."},
+{q:"5, 10, 15, 20 का औसत क्या है?",o:["10","12.5","15","17.5"],a:1,e:"औसत = 50/4 = 12.5."},
+{q:"₹1000 पर 10% वार्षिक दर से 1 वर्ष का साधारण ब्याज कितना होगा?",o:["₹10","₹50","₹100","₹200"],a:2,e:"साधारण ब्याज = 1000 × 10 × 1 / 100 = ₹100."}
+);
+banks.Reasoning.push(
+{q:"4, 8, 12, 16, ?",o:["18","20","22","24"],a:1,e:"हर बार 4 जोड़ते हैं; अगला 20 है।"},
+{q:"अंग्रेज़ी वर्णमाला में M के बाद कौन-सा अक्षर आता है?",o:["L","N","O","P"],a:1,e:"M के बाद N आता है।"},
+{q:"कौन-सा अलग है?",o:["सोमवार","बुधवार","जनवरी","शुक्रवार"],a:2,e:"जनवरी महीना है, बाकी सप्ताह के दिन हैं।"},
+{q:"यदि 1 = A, 2 = B, 3 = C, तो 5 = ?",o:["C","D","E","F"],a:2,e:"अक्षर क्रम में 5वाँ अक्षर E है।"},
+{q:"10, 20, 40, 80, ?",o:["100","120","160","180"],a:2,e:"हर संख्या दोगुनी हो रही है; अगला 160 है।"},
+{q:"आँख : देखना :: कान : ?",o:["बोलना","सुनना","चलना","छूना"],a:1,e:"आँख से देखते हैं और कान से सुनते हैं।"},
+{q:"दक्षिण की विपरीत दिशा कौन-सी है?",o:["पूर्व","पश्चिम","उत्तर","दक्षिण-पूर्व"],a:2,e:"दक्षिण की विपरीत दिशा उत्तर है।"},
+{q:"यदि आज रविवार है, तो कल कौन-सा दिन होगा?",o:["शनिवार","सोमवार","मंगलवार","शुक्रवार"],a:1,e:"रविवार के अगले दिन सोमवार होता है।"},
+{q:"2, 6, 12, 20, ?",o:["24","28","30","32"],a:2,e:"अंतर 4, 6, 8 है; अगला अंतर 10, इसलिए 30."},
+{q:"कौन-सी संख्या बाकी से अलग है?",o:["2","3","5","9"],a:3,e:"2, 3 और 5 अभाज्य संख्याएँ हैं; 9 अभाज्य नहीं है।"}
+);
+banks.English.push(
+{q:"Choose the synonym of 'Brave'.",o:["Cowardly","Courageous","Weak","Lazy"],a:1,e:"Brave और Courageous का अर्थ बहादुर है।"},
+{q:"Choose the antonym of 'Increase'.",o:["Grow","Expand","Decrease","Rise"],a:2,e:"Increase का opposite Decrease है।"},
+{q:"He ___ a book now.",o:["read","reads","is reading","reading"],a:2,e:"Now के साथ present continuous: is reading."},
+{q:"Plural of 'Tooth' is:",o:["Tooths","Teeth","Toothes","Tooth"],a:1,e:"Tooth का plural Teeth है।"},
+{q:"Choose the correct spelling:",o:["Separate","Seperate","Seprate","Separete"],a:0,e:"सही spelling Separate है।"},
+{q:"She ___ finished her homework.",o:["have","has","are","were"],a:1,e:"She के साथ has आता है।"},
+{q:"Antonym of 'Ancient' is:",o:["Old","Historic","Modern","Past"],a:2,e:"Ancient का opposite Modern है।"},
+{q:"A person who writes poems is a:",o:["Poet","Pilot","Painter","Plumber"],a:0,e:"कविताएँ लिखने वाला Poet होता है।"},
+{q:"Choose the correct preposition: The book is ___ the table.",o:["in","on","at","by"],a:1,e:"किताब मेज़ के ऊपर है: on the table."},
+{q:"Past tense of 'See' is:",o:["Seed","Saw","Seen","Seeing"],a:1,e:"See का simple past Saw है।"}
+);
+let subject='GK',questions=[],deadline=0,timerId=null,submitted=false;
+// Remember used questions on this device so consecutive tests avoid repeats.
+const USED_KEY='ssc_chsl_used_questions_v1';
+function getUsed(){try{return JSON.parse(localStorage.getItem(USED_KEY)||'{}')}catch(e){return {}}}
+function saveUsed(used){try{localStorage.setItem(USED_KEY,JSON.stringify(used))}catch(e){}}
+function pickFresh(sub){let used=getUsed();if(!Array.isArray(used[sub]))used[sub]=[];let bank=banks[sub];let available=bank.map((q,i)=>i).filter(i=>!used[sub].includes(i));if(available.length<10){used[sub]=[];available=bank.map((q,i)=>i);}
+  for(let i=available.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[available[i],available[j]]=[available[j],available[i]];}
+  const chosen=available.slice(0,10);used[sub]=used[sub].concat(chosen);saveUsed(used);return chosen.map(i=>bank[i]);}
+
+const $=id=>document.getElementById(id);
+function render(){questions=[];$('questions').innerHTML='';['GK','Maths','Reasoning','English'].forEach(sub=>{const heading=document.createElement('h2');heading.textContent=sub;heading.id='section-'+sub;$('questions').appendChild(heading);pickFresh(sub).forEach((q,idx)=>{const i=questions.length;questions.push({...q,subject:sub});const box=document.createElement('section');box.className='question';const title=document.createElement('div');title.className='qtitle';title.textContent=(idx+1)+'. '+q.q;box.appendChild(title);q.o.forEach((opt,j)=>{const label=document.createElement('label');label.className='option';const r=document.createElement('input');r.type='radio';r.name='q'+i;r.value=j;const span=document.createElement('span');span.textContent=String.fromCharCode(65+j)+'. '+opt;label.append(r,span);box.appendChild(label)});$('questions').appendChild(box)})})}
+function tick(){const s=Math.max(0,Math.ceil((deadline-Date.now())/1000));$('timer').textContent=String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');$('timer').classList.toggle('danger',s<=60);if(s===0){clearInterval(timerId);finish(true)}}
+function start(){submitted=false;$('result').classList.add('hidden');$('form').classList.remove('hidden');$('start').classList.add('hidden');render();deadline=Date.now()+4800000;$('note').textContent='Ek hi timer sabhi 40 questions ke liye chal raha hai. Subject buttons se section badal sakte ho. Is device par pichhle tests mein aaye questions yaad rakhe jaate hain; bank ke saare questions use hone ke baad hi woh dobara aayenge.';tick();timerId=setInterval(tick,500)}
+function finish(auto=false){if(submitted)return;submitted=true;clearInterval(timerId);let score=0;questions.forEach((q,i)=>{const chosen=$('form').querySelector('input[name="q'+i+'"]:checked');if(chosen&&Number(chosen.value)===q.a)score++});$('form').querySelectorAll('input,button').forEach(el=>el.disabled=true);$('note').textContent=auto?'Time up — test auto-submit ho gaya.':'Test submit ho gaya.';let out='<h2>Result</h2><div class="score">'+score+'/40 marks</div><p>'+(auto?'Time khatam hone par auto-submit hua.':'Tumne test submit kiya.')+'</p>';questions.forEach((q,i)=>{const chosen=$('form').querySelector('input[name="q'+i+'"]:checked');const ok=chosen&&Number(chosen.value)===q.a;out+='<div class="result-item"><div class="'+(ok?'correct':'wrong')+'"><b>'+(i+1)+'. '+(ok?'Correct':'Wrong / Not answered')+'</b></div><div>Correct answer: <b>'+q.o[q.a]+'</b></div><div class="muted">'+q.e+'</div></div>'});out+='<button id="again" class="primary" type="button">Isi Page Par Naya Test Kholo</button>';$('result').innerHTML=out;$('result').classList.remove('hidden');$('result').scrollIntoView({behavior:'smooth',block:'start'});$('again').onclick=()=>{reset();start()}}
+function reset(){clearInterval(timerId);submitted=false;$('form').classList.add('hidden');$('result').classList.add('hidden');$('start').classList.remove('hidden');$('timer').textContent='80:00';$('timer').classList.remove('danger');$('note').textContent='Start Test dabao, countdown shuru hoga.';$('form').querySelectorAll('input,button').forEach(e=>e.disabled=false)}
+document.querySelectorAll('.subject').forEach(b=>b.onclick=()=>{subject=b.dataset.sub;document.querySelectorAll('.subject').forEach(x=>x.classList.toggle('active',x===b));if(!$('form').classList.contains('hidden')){const target=$('section-'+subject);if(target)target.scrollIntoView({behavior:'smooth',block:'start'})}else{$('testTitle').textContent='Full Mock Test';}});
+$('start').onclick=start;$('form').onsubmit=e=>{e.preventDefault();finish(false)};
+</script></body></html>
